@@ -1,4 +1,5 @@
-﻿using GeoSearchApi.Repositories;
+﻿using GeoSearchApi.Models;
+using GeoSearchApi.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,11 +16,11 @@ namespace GeoSearchApi.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<List<string>> SearchCityName(string cityName)
+        public ActionResult<List<LocationEntity>> SearchCityName(string cityName)
         {
-            return locationRepostiory.FindByCity(cityName).Select(city => city.City).ToList();
+            return locationRepostiory.FindByCity(cityName);
         }
     }
 }
