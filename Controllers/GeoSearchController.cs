@@ -18,9 +18,9 @@ namespace GeoSearchApi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<List<LocationEntity>> SearchCityName(string cityName)
+        public ActionResult<List<LocationEntity>> SearchCityName(string cityName, int? resultsNumber = null)
         {
-            return locationRepostiory.FindByCity(cityName);
+            return locationRepostiory.FindByCity(cityName, resultsNumber);
         }
     }
 }

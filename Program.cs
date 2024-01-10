@@ -10,15 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var configuration = builder.Configuration;
-var connectionString = configuration.GetConnectionString("DefaultConnection");
-
-if (connectionString == null || connectionString == string.Empty)
-{
-    throw new InvalidOperationException("Connection string was not found or empty");
-}
-
-builder.Services.AddSingleton(provider => new LocationsRepository(connectionString));
+builder.Services.AddSingleton<LocationsRepository>();
 
 var app = builder.Build();
 
