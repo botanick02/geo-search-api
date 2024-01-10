@@ -18,8 +18,7 @@ if (connectionString == null || connectionString == string.Empty)
     throw new InvalidOperationException("Connection string was not found or empty");
 }
 
-builder.Services.AddTransient(provider => new LocationsRepository(connectionString));
-
+builder.Services.AddSingleton(provider => new LocationsRepository(connectionString));
 
 var app = builder.Build();
 
@@ -35,5 +34,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+var citiesMatrix = app.Services.GetRequiredService<LocationsRepository>();
 
 app.Run();

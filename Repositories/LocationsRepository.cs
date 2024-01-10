@@ -2,39 +2,84 @@
 using GeoSearchApi.Models;
 using Microsoft.Data.SqlClient;
 using System.Diagnostics;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using System.Collections.Generic;
+using Microsoft.VisualBasic;
+using System.Collections;
 
 namespace GeoSearchApi.Repositories
 {
     public class LocationsRepository
     {
         private readonly string connectionString;
+        private string defaultLocationsPath = @"./Resources/locations.json";
+        private readonly Dictionary<int, LocationEntity> locationsDict = new Dictionary<int, LocationEntity>();
+        private readonly List<Dictionary<string, List<int>>> citiesIdsMatrix = new List<Dictionary<string, List<int>>>();
+
         public LocationsRepository(string connectionString)
         {
             this.connectionString = connectionString;
+
+            var locations = JsonConvert.DeserializeObject<List<LocationEntity>>(File.ReadAllText(defaultLocationsPath));
+
+            if (locations == null)
+            {
+                throw new FileNotFoundException("Locations were failed to receive");
+            }
+
+            locationsDict = locations.ToDictionary(x => x.Id, x => x);
+
+            int biggestCityName = 0;
+            int id = 0;
+            foreach (var location in locationsDict.Values)
+            {
+                if (location.City.Length > biggestCityName)
+                {
+                    biggestCityName = location.City.Length;
+                    id = location.Id;
+                }
+            }
+
+            for (int i = 0; i < biggestCityName; i++)
+            {
+                var dict = new Dictionary<string, List<int>>();
+
+                foreach (var location in locationsDict.Values)
+                {
+                    if (location.City.Length <= i)
+                    {
+                        continue;
+                    }
+                    var key = location.City.Substring(0, i + 1);
+
+                    var idList = new List<int>();
+                    if (dict.TryGetValue(key, out idList))
+                    {
+                        idList.Add(location.Id);
+                    }
+                    else
+                    {
+                        idList = new List<int>() { location.Id };
+                        dict.Add(key, idList);
+                    }
+                }
+                citiesIdsMatrix.Add(dict);
+            }
         }
 
         public List<LocationEntity> FindByCity(string name)
         {
-            try
-            {
-                var parameters = new
-                {
-                    Name = name + "%"
-                };
-                string sqlQuery = $"SELECT * FROM Location WHERE City LIKE @Name";
+            var foundLocationsIds = citiesIdsMatrix[name.Length - 1][name];
 
-                using (var conn = new SqlConnection(connectionString))
-                {
-                    var locations = conn.Query<LocationEntity>(sqlQuery, parameters).ToList();
-                    
-                    return locations;
-                }
-            }
-            catch (Exception e)
+            var foundLocations = new List<LocationEntity>();
+
+            foreach (var id in foundLocationsIds)
             {
-                Debug.WriteLine(e);
+                foundLocations.Add(locationsDict[id]);
             }
-            return new List<LocationEntity >();
+
+            return foundLocations;
         }
     }
 }
