@@ -12,15 +12,12 @@ namespace GeoSearchApi.Repositories
 {
     public class LocationsRepository
     {
-        private readonly string connectionString;
         private string defaultLocationsPath = @"./Resources/locations.json";
         private readonly Dictionary<int, LocationEntity> locationsDict = new Dictionary<int, LocationEntity>();
         private readonly List<Dictionary<string, List<int>>> citiesIdsMatrix = new List<Dictionary<string, List<int>>>();
 
-        public LocationsRepository(string connectionString)
+        public LocationsRepository()
         {
-            this.connectionString = connectionString;
-
             var locations = JsonConvert.DeserializeObject<List<LocationEntity>>(File.ReadAllText(defaultLocationsPath));
 
             if (locations == null)
@@ -68,15 +65,20 @@ namespace GeoSearchApi.Repositories
             }
         }
 
-        public List<LocationEntity> FindByCity(string name)
+        public List<LocationEntity> FindByCity(string name, int? resultsNumber = null)
         {
             var foundLocationsIds = citiesIdsMatrix[name.Length - 1][name];
 
             var foundLocations = new List<LocationEntity>();
 
-            foreach (var id in foundLocationsIds)
+            for (int i = 0; i < foundLocationsIds.Count; i++)
             {
-                foundLocations.Add(locationsDict[id]);
+                foundLocations.Add(locationsDict[foundLocationsIds[i]]);
+
+                if (resultsNumber != null && i + 1 >= resultsNumber)
+                {
+                    break;
+                }
             }
 
             return foundLocations;
