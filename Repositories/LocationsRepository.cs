@@ -58,15 +58,17 @@ namespace GeoSearchApi.Repositories
             }
         }
 
-        public List<LocationEntity> FindByCity(string name, int? resultsNumber = null)
+        public List<LocationEntityMini> FindByCity(string name, int? resultsNumber = null)
         {
             var foundLocationsIds = citiesIdsMatrix[name.Length - 1][name];
 
-            var foundLocations = new List<LocationEntity>();
+            var foundLocations = new List<LocationEntityMini>();
 
             for (int i = 0; i < foundLocationsIds.Count; i++)
             {
-                foundLocations.Add(locationsDict[foundLocationsIds[i]]);
+                var location = locationsDict[foundLocationsIds[i]];
+
+                foundLocations.Add(new LocationEntityMini() { Id = location.Id, Name = location.City + ", " + location.Country });
 
                 if (resultsNumber != null && i + 1 >= resultsNumber)
                 {
@@ -75,6 +77,11 @@ namespace GeoSearchApi.Repositories
             }
 
             return foundLocations;
+        }
+
+        public LocationEntity FindById(int id)
+        {
+            return locationsDict[id];
         }
     }
 }
