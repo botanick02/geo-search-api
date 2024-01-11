@@ -41,7 +41,7 @@ namespace GeoSearchApi.Repositories
                     {
                         continue;
                     }
-                    var key = location.City.Substring(0, i + 1);
+                    var key = location.City.Substring(0, i + 1).ToLower();
 
                     var idList = new List<int>();
                     if (dict.TryGetValue(key, out idList))
@@ -60,7 +60,7 @@ namespace GeoSearchApi.Repositories
 
         public List<LocationEntityMini> FindByCity(string name, int? resultsNumber = null)
         {
-            var foundLocationsIds = citiesIdsMatrix[name.Length - 1][name];
+            var foundLocationsIds = citiesIdsMatrix[name.Length - 1][name.ToLower()];
 
             var foundLocations = new List<LocationEntityMini>();
 
