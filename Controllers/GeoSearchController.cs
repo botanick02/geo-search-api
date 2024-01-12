@@ -15,7 +15,7 @@ namespace GeoSearchApi.Controllers
             locationRepostiory = locRepo;
         }
 
-        [HttpPost]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<List<LocationEntityMini>> SearchCityName(string cityName, int? resultsNumber = null)
@@ -23,7 +23,7 @@ namespace GeoSearchApi.Controllers
             return locationRepostiory.FindByCity(cityName, resultsNumber);
         }
 
-        [HttpPost("getLocation/{id}")]
+        [HttpGet("getLocation/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<LocationEntity> GetLocation(int id)

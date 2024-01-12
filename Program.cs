@@ -1,20 +1,28 @@
 using GeoSearchApi.Repositories;
-using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DefaultPolicy", builder =>
+    {
+        builder.AllowAnyHeader()
+               .WithMethods("POST", "OPTIONS", "GET")
+               .WithOrigins("http://localhost:3000")
+               .AllowCredentials();
+    });
+});
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<LocationsRepository>();
 
-var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+var app = builder.Build();
+app.UseCors("DefaultPolicy");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
