@@ -1,6 +1,5 @@
 ﻿using GeoSearchApi.Models;
 using GeoSearchApi.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GeoSearchApi.Controllers
@@ -15,12 +14,12 @@ namespace GeoSearchApi.Controllers
             locationRepostiory = locRepo;
         }
 
-        [HttpGet]
+        [HttpGet("{city}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<List<LocationEntityMini>> SearchCityName(string cityName, int? resultsNumber = null)
+        public ActionResult<List<LocationEntityMini>> SearchCityName(string city, int? resultsNumber = null)
         {
-            return locationRepostiory.FindByCity(cityName, resultsNumber);
+            return locationRepostiory.FindByCity(city, resultsNumber);
         }
 
         [HttpGet("getLocation/{id}")]
