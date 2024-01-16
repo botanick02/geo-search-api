@@ -60,6 +60,11 @@ namespace GeoSearchApi.Repositories
 
         public List<LocationEntityMini> FindByCity(string name, int? resultsNumber = null)
         {
+            if (!citiesIdsMatrix[name.Length - 1].ContainsKey(name.ToLower()))
+            {
+                return new List<LocationEntityMini>();
+            }
+
             var foundLocationsIds = citiesIdsMatrix[name.Length - 1][name.ToLower()];
 
             var foundLocations = new List<LocationEntityMini>();
