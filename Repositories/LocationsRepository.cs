@@ -1,5 +1,7 @@
-﻿using GeoSearchApi.Models;
+﻿using GeoCoordinatePortable;
+using GeoSearchApi.Models;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace GeoSearchApi.Repositories
 {
@@ -87,6 +89,30 @@ namespace GeoSearchApi.Repositories
         public LocationEntity FindById(int id)
         {
             return locationsDict[id];
+        }
+
+        public LocationEntity FindByCoordinates(double latitude, double longitude)
+        {
+            LocationEntity locationEntity = locationsDict[1];
+
+            var sCoord = new GeoCoordinate(latitude, longitude);
+            var eCoord = new GeoCoordinate(locationEntity.Latitude, locationEntity.Longitude);
+            var distance = sCoord.GetDistanceTo(eCoord);
+
+            foreach (var location in locationsDict.Values)
+            {
+                eCoord = new GeoCoordinate(location.Latitude, location.Longitude);
+
+                var newDist = sCoord.GetDistanceTo(eCoord);
+
+                if (newDist < distance)
+                {
+                    distance = newDist;
+                    locationEntity = location;
+                }
+            }
+
+            return locationEntity;
         }
     }
 }

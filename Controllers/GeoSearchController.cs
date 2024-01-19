@@ -29,5 +29,13 @@ namespace GeoSearchApi.Controllers
         {
             return locationRepostiory.FindById(id);
         }
+
+        [HttpGet("getLocation/{latitude}/{longitude}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<LocationEntity> GetLocationByCoordinates(double latitude, double longitude)
+        {
+            return locationRepostiory.FindByCoordinates(latitude, longitude);
+        }
     }
 }
