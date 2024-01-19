@@ -14,7 +14,7 @@ namespace GeoSearchApi.Controllers
             locationRepostiory = locRepo;
         }
 
-        [HttpGet("{city}")]
+        [HttpGet("searchLocationsByName/{city}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<List<LocationEntityMini>> SearchCityName(string city, int? resultsNumber = null)
@@ -22,7 +22,7 @@ namespace GeoSearchApi.Controllers
             return locationRepostiory.FindByCity(city, resultsNumber);
         }
 
-        [HttpGet("getLocation/{id}")]
+        [HttpGet("getLocationById/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<LocationEntity> GetLocation(int id)
@@ -30,7 +30,7 @@ namespace GeoSearchApi.Controllers
             return locationRepostiory.FindById(id);
         }
 
-        [HttpGet("getLocation/{latitude}/{longitude}")]
+        [HttpGet("getLocationByCords/{latitude}/{longitude}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<LocationEntity> GetLocationByCoordinates(double latitude, double longitude)
