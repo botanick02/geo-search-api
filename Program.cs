@@ -8,8 +8,7 @@ builder.Services.AddCors(options =>
     {
         builder.AllowAnyHeader()
                .WithMethods("POST", "OPTIONS", "GET")
-               .WithOrigins("http://localhost:3000")
-               .AllowCredentials();
+               .AllowAnyOrigin();
     });
 });
 
