@@ -22,11 +22,8 @@ builder.Services.AddSingleton<LocationsRepository>();
 var app = builder.Build();
 app.UseCors("DefaultPolicy");
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 
 app.UseAuthorization();
